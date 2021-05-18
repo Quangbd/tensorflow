@@ -159,11 +159,18 @@ TFLITE_ATTRIBUTE_WEAK Interpreter::TfLiteDelegatePtr AcquireFlexDelegate() {
   // important that on Android 4.4 we *don't* call SharedLibrary::GetSymbol
   // unless the symbol is sure to exist.
 #if !defined(__ANDROID__)
+#if defined(_WIN32)
+   HMODULE handle = LoadLibrary(TEXT("deep_fw.dll"));
+   auto acquire_flex_delegate_func =
+       reinterpret_cast<Interpreter::TfLiteDelegatePtr (*)()>(
+           SharedLibrary::GetLibrarySymbol(handle, "TF_AcquireFlexDelegate"));
+#else
   auto acquire_flex_delegate_func =
       reinterpret_cast<Interpreter::TfLiteDelegatePtr (*)()>(
           SharedLibrary::GetSymbol("TF_AcquireFlexDelegate"));
+#endif
   if (acquire_flex_delegate_func) {
-    return acquire_flex_delegate_func();
+      return acquire_flex_delegate_func();
   }
 #endif
 

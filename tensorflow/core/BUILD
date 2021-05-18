@@ -725,6 +725,7 @@ cc_library(
         "//tensorflow/core/kernels:list_kernels",  # Depends on variant_op_registry.h
         "//tensorflow/core/kernels:map_kernels",
         "//tensorflow/core/kernels:tensor_map",
+	# "//tensorflow/core/kernels:fft_ops"
     ],
 )
 
